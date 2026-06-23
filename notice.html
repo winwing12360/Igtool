@@ -7,30 +7,38 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #F7F9F7; color: #1B2D22; }
-  header { background: #2D6A4F; padding: 20px 16px; text-align: center; }
+  header { background: #C9A84C; padding: 20px 16px 14px; text-align: center; }
   header h1 { color: white; font-size: 20px; font-weight: 700; }
-  header p { color: #B7E4C7; font-size: 13px; margin-top: 4px; }
-  .container { max-width: 600px; margin: 0 auto; padding: 20px 16px 60px; }
-  .section { background: white; border-radius: 14px; padding: 18px; margin-bottom: 12px; border-left: 4px solid #2D6A4F; }
-  .section h2 { font-size: 15px; font-weight: 700; color: #2D6A4F; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-  .section p, .section li { font-size: 14px; color: #3D5A47; line-height: 1.7; }
+  header p { color: #FFF3DC; font-size: 13px; margin-top: 4px; }
+  .version { text-align: center; font-size: 11px; color: #C8A870; padding: 8px 16px; letter-spacing: 0.05em; }
+  .container { max-width: 600px; margin: 0 auto; padding: 12px 16px 60px; }
+  .section { background: white; border-radius: 14px; padding: 18px; margin-bottom: 12px; border-left: 4px solid #C9A84C; }
+  .section h2 { font-size: 15px; font-weight: 700; color: #C9A84C; margin-bottom: 10px; }
+  .section p, .section li { font-size: 14px; color: #5A4010; line-height: 1.8; }
   .section ul { padding-left: 18px; }
-  .section li { margin-bottom: 4px; }
+  .section li { margin-bottom: 2px; }
   .warning { background: #FFF8E7; border-left-color: #C9A84C; }
   .warning h2 { color: #8B6914; }
   .warning p, .warning li { color: #6B4F0A; }
-  .danger { background: #FEF2F2; border-left-color: #C0392B; }
-  .danger h2 { color: #C0392B; }
-  .danger p, .danger li { color: #7B2020; }
-  .highlight { background: #D8F3DC; border-radius: 8px; padding: 10px 12px; margin-top: 8px; font-size: 13px; color: #2D6A4F; font-weight: 600; }
+  .highlight { background: #FFF3DC; border-radius: 8px; padding: 10px 12px; margin: 8px 0; font-size: 13px; color: #8B6914; font-weight: 600; }
+  .danger-group { background: #FEF2F2; border-radius: 16px; padding: 4px; margin-bottom: 12px; border: 2px solid #C0392B; }
+  .danger-inner { padding: 16px; }
+  .danger-inner + .danger-inner { border-top: 1px solid #FBBCBC; }
+  .danger-inner h2 { font-size: 15px; font-weight: 700; color: #C0392B; margin-bottom: 10px; }
+  .danger-inner p, .danger-inner li { font-size: 14px; color: #7B2020; line-height: 1.8; }
+  .danger-inner ul { padding-left: 18px; }
+  .danger-label { background: #C0392B; color: white; font-size: 11px; font-weight: 700; text-align: center; padding: 6px; border-radius: 12px 12px 0 0; letter-spacing: 0.08em; }
+  .defect-box { background: #FEF2F2; border-radius: 8px; padding: 12px; margin-top: 10px; font-size: 13px; color: #7B2020; line-height: 1.8; }
   footer { text-align: center; padding: 20px; font-size: 12px; color: #6B8F71; }
 </style>
 </head>
 <body>
+
 <header>
   <h1>🍘 仙貝賣場 購物須知</h1>
   <p>下單前請詳細閱讀，感謝您的配合 ❤️</p>
 </header>
+<div class="version">須知版本：2026/06/15 啟用</div>
 
 <div class="container">
 
@@ -44,50 +52,58 @@
     </ul>
   </div>
 
-  <div class="section">
-    <h2>👤 關於帳號</h2>
-    <ul>
-      <li>iOPENMALL 與賣貨便為<strong>同一會員系統</strong>，無需重新註冊</li>
-      <li>下單前記得下滑領取平台折價券</li>
-    </ul>
-  </div>
-
   <div class="section warning">
-    <h2>💰 關於拆單</h2>
+    <h2>💰 關於拆單與折價券</h2>
     <p>消費金額有達平台門檻時，已協助拆分金額：</p>
     <div class="highlight">
-      🛒 範例：訂單金額 $2000<br>
-      → 拆為 $1000 ＋ $1000 兩筆
+      🛒 範例：訂單金額 $2000<br>→ 拆為 $1000 ＋ $1000 兩筆
     </div>
-    <ul style="margin-top:10px">
+    <ul>
       <li>有多張折價券者，可分開下單加速收貨</li>
       <li>無折價券者，將兩筆金額加入同一購物車結帳即可</li>
       <li>⚠️ <strong>務必兩筆都完成下單</strong></li>
-    </ul>
-  </div>
-
-  <div class="section danger">
-    <h2>⚠️ 缺貨退款規則</h2>
-    <ul>
-      <li>享直播優惠價或平台折價券之訂單，如發生缺貨或斷貨，<strong>一律退折扣碼</strong>（非現金）</li>
-      <li>商品為優惠價時，退款金額以優惠價計算</li>
-      <li>‼️ 需要退「現金」者，<strong>請勿使用任何折價券</strong>下單</li>
-    </ul>
-  </div>
-
-  <div class="section warning">
-    <h2>🎟️ 折扣碼使用規則</h2>
-    <ul>
       <li>退款折扣碼與平台折價券<strong>僅能擇一使用</strong></li>
       <li>退款折扣碼不提供扣抵商品金額服務</li>
-      <li>請至 iOPEN 平台自行新增折扣碼使用</li>
-      <li>折扣碼有效期限為 <strong>6 個月</strong></li>
+      <li>請至 iOPEN 平台自行新增折扣碼，有效期限 <strong>6 個月</strong></li>
     </ul>
+    <p style="color:#C0392B; font-weight:700; margin-top:12px; font-size:14px; line-height:1.8;">
+      ⚠️ 商品未取被退回，折價券無法被使用到視同原價<br>
+      原價 + 退回運費 $38 + 寄出運費 $60 = 匯款補寄金額<br>
+      務必記得取貨，以免喪失優惠
+    </p>
   </div>
 
-  <div class="section danger">
-    <h2>📦 收貨後注意事項</h2>
-    <p>「收貨日」起算 <strong>3 天內</strong>如有任何問題請立即提出，超過時間恕無法受理。</p>
+  <div class="danger-group">
+    <div class="danger-label">⚠️ 重要規則，請務必詳閱 ⚠️</div>
+    <div class="danger-inner" style="border-bottom: 1px solid #FBBCBC;">
+      <h2>⏰ 收貨後注意事項</h2>
+      <p style="font-size:15px; font-weight:700; color:#C0392B;">「收貨日」起算 <strong>3 天內</strong>如有任何問題請立即提出<br>超過時間恕無法受理</p>
+    </div>
+    <div class="danger-inner">
+      <h2>‼️ 缺貨退款規則</h2>
+      <ul>
+        <li>享直播優惠價或平台折價券之訂單，如發生缺貨或斷貨，<strong>一律退折扣碼</strong>（非現金）</li>
+        <li>商品為優惠價時，退款金額以優惠價計算</li>
+        <li>需要退「現金」者，<strong>請勿使用任何折價券</strong>下單</li>
+      </ul>
+    </div>
+    <div class="danger-inner">
+      <h2>📦 退換貨規則</h2>
+      <ul>
+        <li>預購自選品，<strong>非重大瑕疵無提供退換貨服務</strong></li>
+        <li>色差、尺寸不理想、不喜歡等非重大瑕疵，恕無法受理</li>
+        <li>經下水商品無法退換</li>
+        <li>連線商品為海外代購，<strong>皆無法受理任何退換貨</strong></li>
+        <li>商品收件後如有短缺、瑕疵，<strong>務必三日內提出</strong>，逾期無法受理</li>
+      </ul>
+      <div class="defect-box">
+        <strong>重大瑕疵定義：</strong><br>
+        · 大面積汙漬：超過 3cm 以上的髒點或無法清洗的污漬<br>
+        · 嚴重破損、破洞：布料破損、抽紗、無法修補的孔洞<br>
+        · 版型結構損壞：衣服嚴重變形、拉鍊損壞、扣子掉落、裝飾脫落<br>
+        · 車縫問題：車縫線嚴重歪斜、大範圍脫線、無法穿上的釦洞
+      </div>
+    </div>
   </div>
 
 </div>
