@@ -8,91 +8,169 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --green: #2D6A4F; --green-light: #40916C; --green-pale: #D8F3DC;
-    --green-mid: #B7E4C7; --gold: #C9A84C; --bg: #F7F9F7;
-    --card: #FFFFFF; --text: #1B2D22; --muted: #6B8F71;
-    --border: #E0EBE2; --done: #27AE60;
+    --green: #2D6A4F;
+    --green-light: #40916C;
+    --green-pale: #D8F3DC;
+    --green-mid: #B7E4C7;
+    --gold: #C9A84C;
+    --bg: #F7F9F7;
+    --card: #FFFFFF;
+    --text: #1B2D22;
+    --muted: #6B8F71;
+    --border: #E0EBE2;
+    --danger: #C0392B;
+    --done: #27AE60;
   }
   body { background: var(--bg); font-family: -apple-system, 'Helvetica Neue', sans-serif; color: var(--text); min-height: 100vh; }
-  header { background: var(--green); padding: 18px 20px 14px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; }
+
+  header {
+    background: var(--green); padding: 18px 20px 14px;
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+  }
   header h1 { color: white; font-size: 17px; font-weight: 700; }
   .badge { background: var(--gold); color: white; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: none; }
   .badge.visible { display: block; }
+
   .progress-bar { height: 3px; background: var(--green-pale); display: none; }
   .progress-bar.visible { display: block; }
   .progress-fill { height: 100%; background: var(--gold); transition: width 0.3s ease; }
+
+  /* STEP 1 */
   .step { padding: 24px 16px; }
   .step-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
   .step h2 { font-size: 22px; font-weight: 700; color: var(--green); margin-bottom: 8px; }
   .step p { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
-  .upload-zone { border: 2.5px dashed var(--green-mid); border-radius: 16px; background: white; padding: 40px 20px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; }
-  .upload-zone:hover { border-color: var(--green); background: var(--green-pale); }
+
+  .upload-zone {
+    border: 2.5px dashed var(--green-mid);
+    border-radius: 16px;
+    background: white;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+  .upload-zone:hover, .upload-zone.drag { border-color: var(--green); background: var(--green-pale); }
   .upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
   .upload-icon { font-size: 48px; margin-bottom: 12px; }
   .upload-zone h3 { font-size: 17px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
   .upload-zone p { font-size: 13px; color: var(--muted); margin: 0; }
-  .hint-box { margin-top: 16px; background: var(--green-pale); border-left: 3px solid var(--green); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: var(--green); line-height: 1.7; }
-  .error-msg { background: #FDECEA; border: 1px solid #E74C3C; border-radius: 8px; color: #C0392B; font-size: 13px; padding: 10px 14px; margin-top: 12px; display: none; }
+
+  .hint-box {
+    margin-top: 16px;
+    background: var(--green-pale);
+    border-left: 3px solid var(--green);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--green);
+    line-height: 1.7;
+  }
+  .hint-box strong { font-weight: 700; }
+
+  .error-msg { background: #FDECEA; border: 1px solid #E74C3C; border-radius: 8px; color: var(--danger); font-size: 13px; padding: 10px 14px; margin-top: 12px; display: none; }
   .error-msg.visible { display: block; }
-  .loading { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 15px; display: none; }
-  .loading.visible { display: block; }
+
+  /* STEP 2 */
   #list-view { display: none; }
   .list-header { padding: 16px 16px 8px; display: flex; align-items: center; justify-content: space-between; }
   .list-header h2 { font-size: 18px; font-weight: 700; color: var(--green); }
   .list-header .count { font-size: 13px; color: var(--muted); }
+
   .filter-bar { padding: 0 16px 10px; display: flex; gap: 8px; }
-  .filter-btn { padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: white; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .filter-btn { padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: white; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all 0.15s; -webkit-tap-highlight-color: transparent; }
   .filter-btn.active { background: var(--green); border-color: var(--green); color: white; }
+
   .cards { padding: 0 16px 100px; display: flex; flex-direction: column; gap: 10px; }
-  .card { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 14px; }
+
+  .card { background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; padding: 14px; transition: border-color 0.2s, opacity 0.2s; }
   .card.done { opacity: 0.5; border-color: var(--green-mid); background: var(--green-pale); }
   .card.hidden { display: none; }
+
   .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
   .card-num { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; }
   .card-status { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
   .card-status.pending { background: var(--green-pale); color: var(--green); }
   .card-status.sent { background: #EAFAF1; color: var(--done); }
-  .card-username { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
-  .card-actions { display: flex; flex-direction: column; gap: 8px; }
-  .btn-ig { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; border: none; border-radius: 10px; padding: 13px 8px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; -webkit-tap-highlight-color: transparent; }
-  .btn-msg { background: var(--gold); color: white; border: none; border-radius: 10px; padding: 13px 8px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; transition: background 0.15s; }
+
+  .card-username { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .card-link { font-size: 11px; color: var(--muted); font-family: 'Menlo', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 12px; background: var(--bg); padding: 6px 10px; border-radius: 6px; }
+
+  .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .btn-ig {
+    background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    color: white; border: none; border-radius: 10px; padding: 13px 8px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-ig:active { opacity: 0.85; }
+
+  .btn-msg { grid-column: 1 / -1; background: var(--gold); color: white; border: none; border-radius: 10px; padding: 13px 8px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; -webkit-tap-highlight-color: transparent; transition: background 0.15s; }
   .btn-msg.copied { background: var(--done); }
-  .btn-done { background: transparent; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .btn-copy { background: var(--green); color: white; border: none; border-radius: 10px; padding: 13px 8px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; -webkit-tap-highlight-color: transparent; transition: background 0.15s; }
+  .btn-copy.copied { background: var(--done); }
+
+  .btn-done { grid-column: 1 / -1; background: transparent; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .card.done .btn-done { border-color: var(--done); color: var(--done); }
+
   .all-done-banner { background: var(--green); color: white; text-align: center; padding: 16px; font-weight: 700; font-size: 16px; display: none; margin: 0 16px 10px; border-radius: 12px; }
   .all-done-banner.visible { display: block; }
-  .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border); padding: 12px 16px; }
-  .btn-reset { display: block; width: 100%; background: transparent; border: 1.5px solid var(--border); border-radius: 10px; padding: 12px; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+  .bottom-reset { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border); padding: 10px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .btn-reset { display: block; width: 100%; background: transparent; border: 1.5px solid var(--border); border-radius: 10px; padding: 11px; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .btn-sync { display: block; width: 100%; background: var(--gold); border: none; border-radius: 10px; padding: 11px; font-size: 14px; font-weight: 700; color: white; cursor: pointer; -webkit-tap-highlight-color: transparent; text-align: center; }
+  .btn-sync.syncing { background: #999; }
+  .btn-sync.success { background: var(--done); }
+
+  .loading { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 15px; display: none; }
+  .loading.visible { display: block; }
+  .spinner { font-size: 32px; animation: spin 1s linear infinite; display: block; margin-bottom: 12px; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🍘 仙貝 IG 發送工具</h1>
+  <h1>仙貝 IG 發送工具</h1>
   <div class="badge" id="badge">0 / 0</div>
 </header>
 <div class="progress-bar" id="progressBar">
   <div class="progress-fill" id="progressFill" style="width:0%"></div>
 </div>
 
+<!-- STEP 1 -->
 <div id="input-view" class="step">
   <div class="step-label">第一步</div>
   <h2>上傳 iOPENMALL 匯出檔</h2>
-  <p>從後台匯出「商品標題及描述」的 XLSX，直接上傳，系統自動找出消費者帳號並組好訊息。</p>
-  <div class="upload-zone">
+  <p>從後台匯出「商品標題及描述」的 XLSX，直接上傳，系統自動找出消費者帳號並組好連結。</p>
+
+  <div class="upload-zone" id="uploadZone">
     <input type="file" accept=".xlsx,.xls" onchange="handleFile(this.files[0])" id="fileInput">
     <div class="upload-icon">📂</div>
     <h3>點此上傳 XLSX 檔案</h3>
     <p>product_batch_update_basic_43_xxxx.xlsx</p>
   </div>
+
   <div class="hint-box">
-    <strong>自動篩選條件：</strong>商品原始貨號含「LIVE」的消費者商品<br>
-    → 商品名稱 = IG 帳號　→　自動組成 iOPENMALL 連結
+    <strong>系統會自動篩選：</strong><br>
+    商品原始貨號含「LIVE」的消費者商品<br>
+    → 商品名稱 = IG 帳號<br>
+    → 自動組成專屬 iOPENMALL 連結
   </div>
+
   <div class="error-msg" id="errMsg"></div>
-  <div class="loading" id="loading">⏳ 讀取中，請稍候…</div>
+
+  <div class="loading" id="loading">
+    <span class="spinner">⏳</span>
+    讀取中，請稍候…
+  </div>
 </div>
 
+<!-- STEP 2 -->
 <div id="list-view">
   <div class="all-done-banner" id="allDoneBanner">🎉 全部發送完成！</div>
   <div class="list-header">
@@ -100,231 +178,295 @@
     <div class="count" id="countLabel"></div>
   </div>
   <div class="filter-bar">
-    <button class="filter-btn active" onclick="setFilter('all',this)">全部</button>
-    <button class="filter-btn" onclick="setFilter('pending',this)">未發送</button>
-    <button class="filter-btn" onclick="setFilter('done',this)">已完成</button>
+    <button class="filter-btn active" onclick="setFilter('all', this)">全部</button>
+    <button class="filter-btn" onclick="setFilter('pending', this)">未發送</button>
+    <button class="filter-btn" onclick="setFilter('done', this)">已完成</button>
   </div>
   <div class="cards" id="cards"></div>
-  <div class="bottom-bar">
-    <div style="display:flex; gap:8px; margin-bottom:8px;">
-    <button class="btn-reset" style="flex:1" onclick="resetAll()">← 重新上傳</button>
-    <button class="btn-reset" style="flex:1; color:#C0392B; border-color:#C0392B;" onclick="clearSentAndReset()">🗑 清除發送記錄</button>
-  </div>
-  <div id="sentCount" style="text-align:center; font-size:12px; color:#6B8F71; padding-bottom:4px;"></div>
+  <div class="bottom-reset">
+    <button class="btn-sync" id="syncBtn" onclick="syncToScript()">☁️ 一鍵同步到轉址服務</button>
+    <button class="btn-reset" onclick="resetAll()">← 重新上傳新檔案</button>
   </div>
 </div>
 
 <script>
-const STORE_ID = '000043';
-const MSG_TEMPLATE = `您好～～這邊是您的 iOPENMALL 專屬下單頁面已建立完畢 🍘
+  const STORE_ID = '000043';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxX7D1y7SnWZo7G6v245eYk4o5ORh_gOIPCiGu6Ovj5XqSwBY-Yexs0Koa6mEtxQZoZ/exec';
 
-👉 您的下單連結：
-{LINK}
+  let items = [];
+  let currentFilter = 'all';
 
-下單前請記得領取「限量」平台折價券❤️
-與賣貨便為同一會員，無需重新註冊
-
-‼️務必點閱此網站‼️ 
-✅下單即代表同意此須知
-（網頁純文字檔無毒請放心點選）
-https://winwing12360.github.io/Igtool/notice.html
-
-📦商品有任何問題「收貨日」起算三天內請立即提出！！！`;
-
-let items = [], currentFilter = 'all';
-
-// 從瀏覽器記憶體讀取已發送名單
-function getSentList() {
-  try { return JSON.parse(localStorage.getItem('senbei_sent') || '[]'); } catch(e) { return []; }
-}
-function saveSent(username) {
-  const list = getSentList();
-  if (!list.includes(username.toLowerCase())) {
-    list.push(username.toLowerCase());
-    localStorage.setItem('senbei_sent', JSON.stringify(list));
+  function buildLink(prodNo, username) {
+    const encoded = encodeURIComponent('iOPEN Mall');
+    return `https://mall.iopenmall.tw/${STORE_ID}/index.php?action=product_detail&prod_no=${prodNo}&utm_source=${encoded}&utm_medium=%E5%95%86%E5%93%81&utm_campaign=${encodeURIComponent(username)}`;
   }
-}
-function removeSent(username) {
-  const list = getSentList().filter(u => u !== username.toLowerCase());
-  localStorage.setItem('senbei_sent', JSON.stringify(list));
-}
-function clearAllSent() {
-  localStorage.removeItem('senbei_sent');
-}
 
-function buildLink(prodNo, username) {
-  return `https://mall.iopenmall.tw/${STORE_ID}/index.php?action=product_detail&prod_no=${prodNo}&utm_source=iOPEN%20Mall&utm_medium=%E5%95%86%E5%93%81&utm_campaign=${encodeURIComponent(username)}`;
-}
+  function handleFile(file) {
+    if (!file) return;
+    const errMsg = document.getElementById('errMsg');
+    errMsg.classList.remove('visible');
+    document.getElementById('loading').classList.add('visible');
 
-function handleFile(file) {
-  if (!file) return;
-  document.getElementById('errMsg').classList.remove('visible');
-  document.getElementById('loading').classList.add('visible');
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const data = new Uint8Array(e.target.result);
-      const wb = XLSX.read(data, { type: 'array' });
-      const ws = wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
-      let headerRow = -1;
-      for (let i = 0; i < Math.min(5, rows.length); i++) {
-        if (rows[i].join('').includes('商品貨號') || rows[i].join('').includes('商品名稱')) { headerRow = i; break; }
-      }
-      let colProdNo = 0, colOrigNo = 1, colName = 2;
-      if (headerRow >= 0) {
-        rows[headerRow].forEach((h, i) => {
-          const s = String(h);
-          if (s.includes('商品貨號') && !s.includes('原始')) colProdNo = i;
-          if (s.includes('商品原始貨號')) colOrigNo = i;
-          if (s.includes('商品名稱')) colName = i;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const wb = XLSX.read(data, { type: 'array' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+
+        // 找標題列
+        let headerRow = -1;
+        for (let i = 0; i < Math.min(5, rows.length); i++) {
+          if (rows[i].join('').includes('商品貨號') || rows[i].join('').includes('商品名稱')) {
+            headerRow = i;
+            break;
+          }
+        }
+
+        let colProdNo = 0, colOrigNo = 1, colName = 2;
+        if (headerRow >= 0) {
+          const headers = rows[headerRow];
+          headers.forEach((h, i) => {
+            const s = String(h);
+            if (s.includes('商品貨號') && !s.includes('原始')) colProdNo = i;
+            if (s.includes('商品原始貨號')) colOrigNo = i;
+            if (s.includes('商品名稱')) colName = i;
+          });
+        }
+
+        const dataRows = rows.slice(headerRow + 2); // 跳過標題和說明列
+        const parsed = [];
+
+        dataRows.forEach(row => {
+          const prodNo = String(row[colProdNo] || '').trim();
+          const origNo = String(row[colOrigNo] || '').trim().toUpperCase();
+          const rawName = String(row[colName] || '').trim();
+
+          if (!prodNo.startsWith('P') || !rawName) return;
+
+          // 支援兩種格式：
+          // 1. 原始貨號含LIVE（舊格式）
+          // 2. 商品名稱含「直播｜」（新格式，名稱如「直播｜（chachawon）」）
+          const isLive = origNo.includes('LIVE');
+          const isDirect = rawName.includes('直播｜');
+          if (!isLive && !isDirect) return;
+
+          // 從「直播｜（username）」格式中提取帳號名稱
+          let username = rawName;
+          const match = rawName.match(/[（(]([^）)]+)[）)]/);
+          if (match) username = match[1].trim();
+
+          // 避免重複：只取A結尾或無後綴的主商品（跳過LIVE0001-B這類子商品）
+          if (origNo.match(/LIVE\d+-B/) || origNo.match(/LIVE\d+-C/)) return;
+
+          const sentList = getSentList();
+          parsed.push({
+            username: username,
+            prodNo: prodNo,
+            link: buildLink(prodNo, username),
+            done: sentList.includes(username.toLowerCase())
+          });
         });
+
+        document.getElementById('loading').classList.remove('visible');
+
+        if (parsed.length === 0) {
+          errMsg.textContent = `❌ 找不到「商品原始貨號含LIVE」的消費者商品。請確認匯出的是「商品標題及描述」類型，且包含消費者商品。`;
+          errMsg.classList.add('visible');
+          return;
+        }
+
+        items = parsed;
+        renderList();
+        document.getElementById('input-view').style.display = 'none';
+        document.getElementById('list-view').style.display = 'block';
+        document.getElementById('badge').classList.add('visible');
+        document.getElementById('progressBar').classList.add('visible');
+        updateProgress();
+
+      } catch(err) {
+        document.getElementById('loading').classList.remove('visible');
+        errMsg.textContent = '❌ 讀取檔案失敗，請確認是 .xlsx 格式。錯誤：' + err.message;
+        errMsg.classList.add('visible');
       }
-      const parsed = [];
-      rows.slice(headerRow + 2).forEach(row => {
-        const prodNo = String(row[colProdNo] || '').trim();
-        const origNo = String(row[colOrigNo] || '').trim().toUpperCase();
-        const name = String(row[colName] || '').trim();
-        if (!prodNo.startsWith('P') || !name || !origNo.includes('LIVE')) return;
-        const sentList = getSentList();
-        parsed.push({ username: name, link: buildLink(prodNo, name), done: sentList.includes(name.toLowerCase()) });
-      });
-      document.getElementById('loading').classList.remove('visible');
-      if (parsed.length === 0) {
-        const err = document.getElementById('errMsg');
-        err.textContent = '❌ 找不到原始貨號含「LIVE」的消費者商品。';
-        err.classList.add('visible');
-        return;
-      }
-      items = parsed;
-      renderList();
-      document.getElementById('input-view').style.display = 'none';
-      document.getElementById('list-view').style.display = 'block';
-      document.getElementById('badge').classList.add('visible');
-      document.getElementById('progressBar').classList.add('visible');
-      updateProgress();
-    } catch(err) {
-      document.getElementById('loading').classList.remove('visible');
-      const e2 = document.getElementById('errMsg');
-      e2.textContent = '❌ 讀取失敗：' + err.message;
-      e2.classList.add('visible');
-    }
-  };
-  reader.readAsArrayBuffer(file);
-}
-
-function renderList() {
-  const container = document.getElementById('cards');
-  container.innerHTML = '';
-  items.forEach((item, i) => {
-    const igUser = item.username.replace(/^@/, '');
-    const card = document.createElement('div');
-    card.className = `card ${item.done ? 'done' : ''}`;
-    card.id = `card-${i}`;
-    if (currentFilter === 'pending' && item.done) card.classList.add('hidden');
-    if (currentFilter === 'done' && !item.done) card.classList.add('hidden');
-    card.innerHTML = `
-      <div class="card-top">
-        <div class="card-num"># ${i + 1}</div>
-        <div class="card-status ${item.done ? 'sent' : 'pending'}">${item.done ? '✓ 已發送' : '待發送'}</div>
-      </div>
-      <div class="card-username">@${item.username}</div>
-      <div class="card-actions">
-        <button class="btn-ig" onclick="openIG('${igUser}')">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          開啟 IG 對話
-        </button>
-        <button class="btn-msg" id="msg-${i}" onclick="copyMsg(${i})">💬 複製完整訊息（含連結）</button>
-        <button class="btn-done" id="done-${i}" onclick="toggleDone(${i})">${item.done ? '✓ 取消完成' : '標記為已發送'}</button>
-      </div>`;
-    container.appendChild(card);
-  });
-  updateProgress();
-}
-
-function openIG(username) { window.open(`https://www.instagram.com/${username}/`, '_blank'); }
-
-function copyMsg(i) {
-  const msg = MSG_TEMPLATE.replace('{LINK}', items[i].link);
-  const btn = document.getElementById('msg-' + i);
-  const succeed = () => {
-    btn.classList.add('copied');
-    btn.textContent = '✅ 已複製！去 IG 貼上發送';
-    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '💬 複製完整訊息（含連結）'; }, 3000);
-  };
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(msg).then(succeed).catch(() => fallback(msg, succeed));
-  } else { fallback(msg, succeed); }
-}
-
-function fallback(text, cb) {
-  const el = document.createElement('textarea');
-  el.value = text; el.style.cssText = 'position:fixed;opacity:0';
-  document.body.appendChild(el); el.select(); document.execCommand('copy');
-  document.body.removeChild(el); cb();
-}
-
-function toggleDone(i) {
-  items[i].done = !items[i].done;
-  if (items[i].done) {
-    saveSent(items[i].username);
-  } else {
-    removeSent(items[i].username);
+    };
+    reader.readAsArrayBuffer(file);
   }
-  renderList(); applyFilter(currentFilter); checkAllDone();
-}
 
-function setFilter(f, btn) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  applyFilter(f);
-}
+  function renderList() {
+    const container = document.getElementById('cards');
+    container.innerHTML = '';
 
-function applyFilter(f) {
-  items.forEach((item, i) => {
-    const card = document.getElementById('card-' + i);
-    if (!card) return;
-    if (f === 'all') card.classList.remove('hidden');
-    else if (f === 'pending') card.classList.toggle('hidden', item.done);
-    else if (f === 'done') card.classList.toggle('hidden', !item.done);
-  });
-}
+    items.forEach((item, i) => {
+      const igUser = item.username.replace(/^@/, '');
+      const card = document.createElement('div');
+      card.className = `card ${item.done ? 'done' : ''}`;
+      card.id = `card-${i}`;
+      if (currentFilter === 'pending' && item.done) card.classList.add('hidden');
+      if (currentFilter === 'done' && !item.done) card.classList.add('hidden');
 
-function updateProgress() {
-  const done = items.filter(i => i.done).length, total = items.length;
-  document.getElementById('badge').textContent = `${done} / ${total}`;
-  document.getElementById('progressFill').style.width = total ? (done/total*100) + '%' : '0%';
-  document.getElementById('countLabel').textContent = `已完成 ${done} 筆，共 ${total} 筆`;
-  const totalSent = getSentList().length;
-  const sc = document.getElementById('sentCount');
-  if (sc) sc.textContent = `累計已通知 ${totalSent} 位客人（跨活動記憶）`;
-}
+      card.innerHTML = `
+        <div class="card-top">
+          <div class="card-num"># ${i + 1}</div>
+          <div class="card-status ${item.done ? 'sent' : 'pending'}">${item.done ? '✓ 已發送' : '待發送'}</div>
+        </div>
+        <div class="card-username">@${item.username}</div>
+        <div class="card-link">${item.link}</div>
+        <div class="card-actions">
+          <button class="btn-ig" onclick="openIG('${igUser}')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            開啟對話
+          </button>
+          <button class="btn-msg" id="msg-${i}" onclick="copyMsg(${i})">
+            💬 複製完整訊息
+          </button>
+          <button class="btn-done" id="done-${i}" onclick="toggleDone(${i})">
+            ${item.done ? '✓ 取消完成' : '標記為已發送'}
+          </button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
 
-function checkAllDone() {
-  document.getElementById('allDoneBanner').classList.toggle('visible', items.length > 0 && items.every(i => i.done));
-}
+    updateProgress();
+  }
 
-function clearSentAndReset() {
-  if (!confirm('確定清除所有已發送記錄？清除後所有人都會重新顯示為待發送。')) return;
-  clearAllSent();
-  resetAll();
-}
+  function openIG(username) {
+    window.open(`https://www.instagram.com/${username}/`, '_blank');
+  }
 
-function resetAll() {
-  if (items.some(i => i.done) && !confirm('確定重新上傳？進度將清除。')) return;
-  items = [];
-  document.getElementById('fileInput').value = '';
-  document.getElementById('errMsg').classList.remove('visible');
-  document.getElementById('input-view').style.display = 'block';
-  document.getElementById('list-view').style.display = 'none';
-  document.getElementById('badge').classList.remove('visible');
-  document.getElementById('progressBar').classList.remove('visible');
-  document.getElementById('allDoneBanner').classList.remove('visible');
-  document.getElementById('progressFill').style.width = '0%';
-  currentFilter = 'all';
-}
+  function copyMsg(i) {
+    const item = items[i];
+    const msg = MSG_TEMPLATE.replace('{LINK}', item.link);
+    const btn = document.getElementById('msg-' + i);
+    const succeed = () => {
+      btn.classList.add('copied');
+      btn.textContent = '✅ 已複製！去 IG 貼上發送';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.textContent = '💬 複製完整訊息';
+      }, 3000);
+    };
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(msg).then(succeed).catch(() => fallbackCopy(msg, succeed));
+    } else {
+      fallbackCopy(msg, succeed);
+    }
+  }
+
+  function copyLink(i) {
+    const link = items[i].link;
+    const btn = document.getElementById(`copy-${i}`);
+
+    const succeed = () => {
+      btn.classList.add('copied');
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 已複製！`;
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> 複製連結`;
+      }, 2000);
+    };
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(link).then(succeed).catch(() => fallbackCopy(link, succeed));
+    } else {
+      fallbackCopy(link, succeed);
+    }
+  }
+
+  function fallbackCopy(text, cb) {
+    const el = document.createElement('textarea');
+    el.value = text; el.style.position = 'fixed'; el.style.opacity = '0';
+    document.body.appendChild(el); el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    cb();
+  }
+
+  function toggleDone(i) {
+    items[i].done = !items[i].done;
+    renderList();
+    applyFilter(currentFilter);
+    checkAllDone();
+  }
+
+  function setFilter(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilter(filter);
+  }
+
+  function applyFilter(filter) {
+    items.forEach((item, i) => {
+      const card = document.getElementById(`card-${i}`);
+      if (!card) return;
+      if (filter === 'all') card.classList.remove('hidden');
+      else if (filter === 'pending') card.classList.toggle('hidden', item.done);
+      else if (filter === 'done') card.classList.toggle('hidden', !item.done);
+    });
+  }
+
+  function updateProgress() {
+    const done = items.filter(i => i.done).length;
+    const total = items.length;
+    const pct = total ? Math.round((done / total) * 100) : 0;
+    document.getElementById('badge').textContent = `${done} / ${total}`;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('countLabel').textContent = `已完成 ${done} 筆，共 ${total} 筆`;
+  }
+
+  function checkAllDone() {
+    const allDone = items.length > 0 && items.every(i => i.done);
+    document.getElementById('allDoneBanner').classList.toggle('visible', allDone);
+  }
+
+  function syncToScript() {
+    if (items.length === 0) return;
+    var compact = items.map(function(item) {
+      return [item.username, item.link];
+    });
+    var encoded = encodeURIComponent(JSON.stringify(compact));
+    var syncUrl = SCRIPT_URL + '?sync=1&d=' + encoded;
+    window.open(syncUrl, '_blank');
+    var btn = document.getElementById("syncBtn");
+    btn.textContent = "✅ 已開啟同步頁面，完成後關掉即可";
+    btn.classList.add("success");
+    setTimeout(function() {
+      btn.textContent = "☁️ 一鍵同步（開新分頁）";
+      btn.classList.remove("success");
+    }, 5000);
+  }
+
+  function downloadCSV() {
+    if (items.length === 0) return;
+    let csv = "帳號,連結\n";
+    items.forEach(item => { csv += item.username + "," + item.link + "\n"; });
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "仙貝IG對照表.csv";
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+
+  function resetAll() {
+    if (items.some(i => i.done)) {
+      if (!confirm('確定重新上傳新檔案？目前進度將清除。')) return;
+    }
+    items = [];
+    document.getElementById('fileInput').value = '';
+    document.getElementById('errMsg').classList.remove('visible');
+    document.getElementById('loading').classList.remove('visible');
+    document.getElementById('input-view').style.display = 'block';
+    document.getElementById('list-view').style.display = 'none';
+    document.getElementById('badge').classList.remove('visible');
+    document.getElementById('progressBar').classList.remove('visible');
+    document.getElementById('allDoneBanner').classList.remove('visible');
+    document.getElementById('progressFill').style.width = '0%';
+    currentFilter = 'all';
+  }
 </script>
-
 </body>
 </html>
