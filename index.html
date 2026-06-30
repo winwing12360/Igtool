@@ -196,6 +196,22 @@
   let items = [];
   let currentFilter = 'all';
 
+  function getSentList() {
+    try { return JSON.parse(localStorage.getItem('senbei_sent') || '[]'); } catch(e) { return []; }
+  }
+  function saveSent(username) {
+    const list = getSentList();
+    if (!list.includes(username.toLowerCase())) {
+      list.push(username.toLowerCase());
+      localStorage.setItem('senbei_sent', JSON.stringify(list));
+    }
+  }
+  function removeSent(username) {
+    const list = getSentList().filter(u => u !== username.toLowerCase());
+    localStorage.setItem('senbei_sent', JSON.stringify(list));
+  }
+  function clearAllSent() { localStorage.removeItem('senbei_sent'); }
+
   function buildLink(prodNo, username) {
     const encoded = encodeURIComponent('iOPEN Mall');
     return `https://mall.iopenmall.tw/${STORE_ID}/index.php?action=product_detail&prod_no=${prodNo}&utm_source=${encoded}&utm_medium=%E5%95%86%E5%93%81&utm_campaign=${encodeURIComponent(username)}`;
@@ -260,14 +276,17 @@
           // 避免重複：只取A結尾或無後綴的主商品（跳過LIVE0001-B這類子商品）
           if (origNo.match(/LIVE\d+-B/) || origNo.match(/LIVE\d+-C/)) return;
 
-          const sentList = getSentList();
           parsed.push({
             username: username,
             prodNo: prodNo,
             link: buildLink(prodNo, username),
-            done: sentList.includes(username.toLowerCase())
+            done: false
           });
         });
+
+        // 更新已發送狀態
+        const sentList = getSentList();
+        parsed.forEach(item => { item.done = sentList.includes(item.username.toLowerCase()); });
 
         document.getElementById('loading').classList.remove('visible');
 
